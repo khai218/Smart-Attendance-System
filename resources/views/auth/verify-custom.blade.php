@@ -21,7 +21,7 @@
     <br>
     <div style="max-width: 300px; margin: auto; padding: 20px; background: #ffffff; border-radius: 2%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <header style="text-align: center; margin-bottom: 20px;">
-            <img src="{{asset('logo/icon-poli.png')}}" alt="Politeknik Kuching Sarawak's Logo" width="150" height="50" style="display: block; margin: 0 auto;">
+            <img src="{{ $message->embed(public_path().'/logo/icon-poli.png') }}" alt="Politeknik Kuching Sarawak's Logo" width="200" height="70" style="display: block; margin: 0 auto;">
         </header>
 
         <p style="color: #555; font-size: 16px; line-height: 1.5;">Hi, {{$user->name}}</p>
