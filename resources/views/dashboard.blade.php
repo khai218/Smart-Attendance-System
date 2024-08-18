@@ -15,7 +15,7 @@
                         <img src="{{ asset('background/abstrak.jpg') }}" alt="Gunung Serapi" style="height: 170px; width: 1100px;">
                     </div>
                     <br>
-                    <h1 class="p-6 text-gray-900 font-bold">Introduction</h1>
+                    <h1 class="pt-2 pb-2 px-6 text-gray-900 font-bold">Introduction</h1>
                     <p class="p-6 text-gray-900">The "Internet of Things" (IoT) connects everyday objects to the internet, improving efficiency across many industries. In education, IoT can enhance attendance tracking, which is often done manually and is prone to errors and dishonesty. The JTMK Smart Attendance System aims to solve these issues by using IoT technology like fingerprint scanning and facial recognition. This system will automatically record attendance, update it in real-time, and send alerts if a student's attendance falls below 80%. By replacing manual methods, this solution makes attendance tracking more accurate, secure, and efficient.</p>
                 </div>
             </div>

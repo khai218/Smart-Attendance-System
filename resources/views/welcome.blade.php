@@ -3,7 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Smart Attendance System</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('logo/icon-poli-removebg.png') }}" type="image/png" sizes="16x16">
+
+    <!-- Include the Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -11,10 +17,11 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             position: relative;
             background-color: #f0f0f0;
-            overflow: hidden; /* Prevent scrollbars */
+            overflow: hidden;
+            overflow-x: hidden;
         }
         .background-image {
             position: absolute;
@@ -26,25 +33,29 @@
             background-size: cover;
             background-position: center;
             opacity: 0.4;
-            z-index: -1; /* Send background behind the content */
+            z-index: -1;
+            transition: opacity 0.5s;
         }
         .container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 4rem; /* Increased padding */
+            padding: 4rem;
             width: 100%;
-            max-width: 400px; /* Adjust container width */
+            max-width: 400px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Slightly larger shadow */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
         .logo img {
-            height: 130px; /* Adjusted logo size */
+            height: 130px;
             width: auto;
-            margin-bottom: 1.5rem; /* Space between logo and divider */
+            margin-bottom: 1.5rem;
+            transition: transform 0.5s;
         }
         hr {
             width: 100%;
@@ -71,11 +82,11 @@
         }
         .button-custom:hover {
             background-color: rgba(31, 41, 55, 0.8);
-            transform: translateY(-2px); /* Lift effect */
+            transform: translateY(-5px);
         }
         .button-custom:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.3); /* Focus ring */
+            box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.3);
         }
     </style>
 </head>
@@ -99,6 +110,24 @@
             </div>
         </div>
     @endif
+
+    <script>
+        // Parallax effect for background
+        window.addEventListener('scroll', function() {
+            const backgroundImage = document.querySelector('.background-image');
+            let scrollPosition = window.scrollY;
+            backgroundImage.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+        });
+
+        // Logo bounce effect on load
+        window.addEventListener('load', function() {
+            const logo = document.querySelector('.logo img');
+            logo.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                logo.style.transform = 'scale(1)';
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
 
