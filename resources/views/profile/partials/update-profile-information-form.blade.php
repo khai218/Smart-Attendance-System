@@ -10,7 +10,7 @@
     </header>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
+        @csrf        
     </form>
 
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
@@ -21,6 +21,12 @@
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        </div>
+
+        <div>
+            <x-input-label for="matrixno" :value="__('Matrix Card')" />
+            <x-text-input id="matrixno" name="matrixno" type="text" class="mt-1 block w-full" :value="old('matrixno', $user->matrixno)" required autofocus autocomplete="matrixno" />
+            <x-input-error class="mt-2" :messages="$errors->get('matrixno')" />
         </div>
 
         <div>
