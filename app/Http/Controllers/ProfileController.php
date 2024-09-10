@@ -16,6 +16,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        // Conditionally return different views based on the user's role
+        if ($request->user()->role === 'admin') {
+            return view('profile.admin-edit', [
+                'user' => $request->user(),
+            ]);
+        }
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
@@ -28,10 +35,12 @@ class ProfileController extends Controller
     {
         $request->user()->fill($request->validated());
 
+        // If the email is updated, reset the email verification timestamp
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
+        // Save the updated user information
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
@@ -42,16 +51,20 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Validate the request password before account deletion
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
 
+        // Log the user out
         Auth::logout();
 
+        // Delete the user account
         $user->delete();
 
+        // Invalidate and regenerate session token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

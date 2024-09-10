@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-adminapp-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Smart Attendance System Admin Page') }}
@@ -21,4 +21,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-adminapp-layout>
