@@ -6,8 +6,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
-
-
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,34 +25,55 @@ Route::get('/test', function () {
     return view('about-us');
 })->middleware(['auth', 'verified'])->name('test');
 
+Route::get('/registration', [UserController::class, 'showUsers'], function () {
+    return view('admin.registration');
+})->middleware(['auth', 'verified'])->name('registration');
+
+Route::get('/admin-dashboard', function () {
+    return view('admin.dashboard');
+})->middleware(['auth', 'verified'])->name('admin-dashboard');
+
 Route::middleware('auth')->group(function () {
+    // Regular user profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Admin registration routes
+    Route::get('admin/register', [RegisteredUserController::class, 'create'])->name('admin.register');
+    Route::post('admin/register', [RegisteredUserController::class, 'store']);
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function(){
-    Route::get('/admin/dashboard',[AdminController::class,'dashboard']);
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Admin dashboard route
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Admin profile edit route
+    Route::get('/profile/admin-edit', [ProfileController::class, 'edit'])->name('profile.admin-edit');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function(){
-    Route::get('/agent/dashboard',[AdminController::class,'dashboard']);
+Route::middleware(['auth', 'role:agent'])->group(function () {
+    // Agent dashboard route
+    Route::get('/agent/dashboard', [AgentController::class, 'dashboard'])->name('agent.dashboard');
 });
 
+// Email verification routes
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
- 
-    return redirect('/home');
+
+    return redirect('/dashboard');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
- 
+
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+// Include authentication routes
 require __DIR__.'/auth.php';
+

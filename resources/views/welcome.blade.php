@@ -103,9 +103,6 @@
                     <a href="{{ url('/dashboard') }}" class="button-custom">Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="button-custom">Log in</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="button-custom">Register</a>
-                    @endif
                 @endauth
             </div>
         </div>
