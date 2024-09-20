@@ -18,8 +18,8 @@
                     <x-nav-link :href="route('registration')" :active="request()->routeIs('registration')">
                         {{ __('Users') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('test')" :active="request()->routeIs('about-us')">
-                        {{ __('Test') }}
+                    <x-nav-link :href="route('staff_registration')" :active="request()->routeIs('admin.staff_registration')">
+                        {{ __('Staff') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -42,10 +42,6 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Settings') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
