@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,12 @@ Route::get('/about-us', function () {
 Route::get('/test', function () {
     return view('about-us');
 })->middleware(['auth', 'verified'])->name('test');
+
+Route::get('/record', function () {
+    return view('record');
+})->middleware(['auth', 'verified'])->name('record');
+
+Route::get('/record', [ActivityController::class, 'index'])->name('record');
 
 Route::get('/registration', [UserController::class, 'showUsers'], function () {
     return view('admin.registration');
@@ -74,6 +81,13 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+// Route to show the staff registration form
+Route::get('/staff_registration', [RegisteredUserController::class, 'staffRegistrationForm'])->middleware(['auth', 'role:admin'])->name('admin.staff_registration');
+
+// Route to handle staff registration form submission
+Route::post('/staff_registration', [RegisteredUserController::class, 'registerStaff'])->middleware(['auth', 'role:admin'])->name('staff.register');
+
+Route::get('/staff_registration', [UserController::class, 'showStaff'])->middleware(['auth', 'role:admin'])->name('staff_registration');
+
 // Include authentication routes
 require __DIR__.'/auth.php';
-

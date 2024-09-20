@@ -7,55 +7,58 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
+
             <!-- Flexbox container for form and table, arranged horizontally -->
-            <div class="flex flex-row gap-6">
+            <div class="flex flex-col lg:flex-row gap-6">
 
                 <!-- Admin Registration Form -->
-                <div class="w-2/5 bg-white shadow-lg sm:rounded-lg p-6">
-                    <div class="kotak">
-                        <form method="POST" action="{{ route('admin.register') }}" class="space-y-6">
-                            @csrf
+                <div class="lg:w-1/3 bg-white shadow-lg sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('User Registration') }}</h3>
+                    <form method="POST" action="{{ route('admin.register') }}" class="space-y-6">
+                        @csrf
 
-                            <!-- Form Title -->
-                            <h3 class="text-lg font-medium text-gray-900">{{ __('Admin Registration Form') }}</h3>
+                        <!-- Name -->
+                        <fieldset>
+                            <x-input-label for="name" :value="__('Name')" />
+                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" placeholder="Enter user's full name" required autofocus autocomplete="name" />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </fieldset>
 
-                            <!-- Name -->
-                            <fieldset>
-                                <x-input-label for="name" :value="__('Name')" />
-                                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" placeholder="Enter your full name" required autofocus autocomplete="name" />
-                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                            </fieldset>
+                        <!-- Email Address -->
+                        <fieldset>
+                            <x-input-label for="email" :value="__('Email')" />
+                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" placeholder="Enter user's email address" required autocomplete="username" />
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        </fieldset>
 
-                            <!-- Email Address -->
-                            <fieldset class="mt-4">
-                                <x-input-label for="email" :value="__('Email')" />
-                                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" placeholder="Enter your email address" required autocomplete="username" />
-                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                            </fieldset>
+                        <!-- Matrix Number -->
+                        <fieldset>
+                            <x-input-label for="matrixno" :value="__('Matrix Number')" />
+                            <x-text-input id="matrixno" class="block mt-1 w-full" type="text" name="matrixno" :value="old('matrixno')" placeholder="Enter user's matrix number" required autocomplete="matrixno" />
+                            <x-input-error :messages="$errors->get('matrixno')" class="mt-2" />
+                        </fieldset>
 
-                            <!-- Matrix Number -->
-                            <fieldset class="mt-4">
-                                <x-input-label for="matrixno" :value="__('Matrix Number')" />
-                                <x-text-input id="matrixno" class="block mt-1 w-full" type="text" name="matrixno" :value="old('matrixno')" placeholder="Enter your matrix number" required autocomplete="matrixno" />
-                                <x-input-error :messages="$errors->get('matrixno')" class="mt-2" />
-                            </fieldset>
-
-                            <!-- Registration Button -->
-                            <div class="flex items-center justify-between mt-6">
-                                <x-primary-button class="ml-4">
-                                    {{ __('Add') }}
-                                </x-primary-button>
-                            </div>
-                        </form>
-                    </div>
+                        <!-- Registration Button -->
+                        <div class="flex items-center justify-between mt-6">
+                            <x-primary-button class="ml-4">
+                                {{ __('Add') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- Registered Users Table (With Filter and without Role Column) -->
-                <div class="w-3/5 bg-white shadow-lg sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900">{{ __('Registered Users') }}</h3>
-                    <div class="overflow-y-auto max-h-96">
-                        <table class="table-auto w-full mt-4 border-collapse border border-gray-200">
+                <!-- Registered Users Table (With Real-Time Search and Highlight) -->
+                <div class="lg:w-2/3 bg-white shadow-lg sm:rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Registered Users') }}</h3>
+                    
+                    <!-- Search Bar -->
+                    <div class="mb-4">
+                        <input id="search" type="text" placeholder="Search..." class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onkeyup="searchTable()">
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full border-collapse border border-gray-200" id="usersTable">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="border border-gray-200 px-4 py-2 text-left min-w-[150px]">{{ __('Name') }}</th>
@@ -68,9 +71,10 @@
                             <tbody>
                                 @php
                                     $nonAdminUsers = $users->filter(function ($user) {
-                                        return $user->role !== 'admin';
+                                        return $user->role !== 'admin' && $user->role !== 'agent';
                                     });
                                 @endphp
+
                                 @if ($nonAdminUsers->isEmpty())
                                     <tr>
                                         <td colspan="5" class="border border-gray-200 px-4 py-2 text-center">{{ __('No users found.') }}</td>
@@ -94,4 +98,37 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for Real-Time Search and Highlight -->
+    <script>
+        function searchTable() {
+            const input = document.getElementById("search");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("usersTable");
+            const rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+                const row = rows[i];
+                const cells = row.getElementsByTagName("td");
+                let found = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = cells[j];
+                    if (cell) {
+                        const textValue = cell.textContent || cell.innerText;
+                        if (textValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+    </script>
 </x-adminapp-layout>
