@@ -54,6 +54,7 @@
                                 <tr class="bg-gray-100">
                                     <th class="border border-gray-200 px-4 py-2 text-left">{{ __('Name') }}</th>
                                     <th class="border border-gray-200 px-4 py-2 text-left">{{ __('Email') }}</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,6 +68,12 @@
                                             <tr class="bg-white hover:bg-gray-50 h-12">
                                                 <td class="border border-gray-200 px-4 py-2">{{ $user->name }}</td>
                                                 <td class="border border-gray-200 px-4 py-2">{{ $user->email }}</td>
+                                                <td class="border border-gray-200 px-4 py-2">
+                                                    <a href="{{ route('admin.staff.edit', $user->id) }}" 
+                                                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                                            {{ __('Edit') }}
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endif
                                     @endforeach

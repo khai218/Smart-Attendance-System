@@ -30,15 +30,22 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validate the name, matrix number, and email fields
+        // Validate the name, matrix number, email, and image fields
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'matrixno' => ['required', 'string', 'max:255'], 
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048'
         ]);
 
         // Set a default password
-        $defaultPassword = 'password123'; // Change this to a more secure default or generate dynamically if needed
+        $defaultPassword = 'password123'; // You may want to generate this dynamically
+
+        // Handle the image upload and store it in the 'public/images' folder
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public'); // Store the image and get the path
+        }
 
         // Create the user with the default password
         $user = User::create([
@@ -46,16 +53,19 @@ class RegisteredUserController extends Controller
             'matrixno' => $request->matrixno,
             'email' => $request->email,
             'password' => Hash::make($defaultPassword), // Hash the default password
+            'image' => $imagePath // Store the image path in the database
         ]);
 
         // Trigger the registered event
         event(new Registered($user));
 
+        // Optional: create a related user activity table or any custom behavior
         $this->createUserActivityTable($user->matrixno);
-          
-        // Redirect to admin dashboard with a success message
+
+        // Redirect to the admin dashboard with a success message
         return redirect()->route('admin.dashboard')->with('success', 'User registered successfully with default password.');
     }
+
 
     /**
      * Create a table for the user based on their matrix number
@@ -102,5 +112,24 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         return redirect()->route('admin.dashboard')->with('success', 'Staff registered successfully.');
+    }
+
+    // Handle image upload
+    public function uploadImage(Request $request, $userId): RedirectResponse
+    {
+        // Validate the uploaded image
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Ensure it's an image
+        ]);
+
+        $user = User::findOrFail($userId);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->get(); // Get the binary data
+            $user->image = $image; // Save the binary data in the 'image' column
+            $user->save();
+        }
+
+        return redirect()->back()->with('success', 'Image uploaded successfully!');
     }
 }

@@ -40,6 +40,19 @@ Route::get('/admin-dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('admin-dashboard');
 
+Route::post('/admin/upload-image/{user}', [RegisteredUserController::class, 'uploadImage'])->name('admin.uploadImage');
+
+Route::get('/image-viewer', function () {
+    $imageUrl = request('imageUrl');
+    return view('admin.image-viewer', compact('imageUrl'));
+});
+
+Route::get('/admin/users/{id}', [AdminController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+
+Route::get('/admin/staff/{id}', [AdminController::class, 'staff_edit'])->name('admin.staff.edit');
+
 Route::middleware('auth')->group(function () {
     // Regular user profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
