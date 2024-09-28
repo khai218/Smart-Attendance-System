@@ -12,9 +12,16 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class RegisteredUserController extends Controller
 {
+    public function test(): View
+    {
+        $fingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
+        return view('simple', compact('fingerprintIds')); // Test with a simple view
+    }
+
     /**
      * Display the registration view.
      */
@@ -30,28 +37,31 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validate the name, matrix number, email, and image fields
+        // Validate the name, matrix number, email, fingerprint ID, and image fields
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'matrixno' => ['required', 'string', 'max:255'], 
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'matrixno' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id', // Validate against the fingerprint table
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048'
         ]);
 
         // Set a default password
-        $defaultPassword = 'password123'; // You may want to generate this dynamically
+        $defaultPassword = 'password123'; // Consider making this more secure
 
         // Handle the image upload and store it in the 'public/images' folder
+        $imagePath = null; // Initialize the variable
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('images', 'public'); // Store the image and get the path
         }
 
-        // Create the user with the default password
+        // Create the user with the default password and fingerprint_id
         $user = User::create([
             'name' => $request->name,
             'matrixno' => $request->matrixno,
             'email' => $request->email,
+            'fingerprint_id' => $request->fingerprint_id, // Include fingerprint_id
             'password' => Hash::make($defaultPassword), // Hash the default password
             'image' => $imagePath // Store the image path in the database
         ]);
@@ -65,7 +75,6 @@ class RegisteredUserController extends Controller
         // Redirect to the admin dashboard with a success message
         return redirect()->route('admin.dashboard')->with('success', 'User registered successfully with default password.');
     }
-
 
     /**
      * Create a table for the user based on their matrix number

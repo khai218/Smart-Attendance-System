@@ -40,6 +40,8 @@ Route::get('/admin-dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('admin-dashboard');
 
+Route::get('/test-fingerprint', [RegisteredUserController::class, 'test']);
+
 Route::post('/admin/upload-image/{user}', [RegisteredUserController::class, 'uploadImage'])->name('admin.uploadImage');
 
 Route::get('/image-viewer', function () {
@@ -100,7 +102,7 @@ Route::get('/staff_registration', [RegisteredUserController::class, 'staffRegist
 // Route to handle staff registration form submission
 Route::post('/staff_registration', [RegisteredUserController::class, 'registerStaff'])->middleware(['auth', 'role:admin'])->name('staff.register');
 
-Route::get('/staff_registration', [UserController::class, 'showStaff'])->middleware(['auth', 'role:admin'])->name('staff_registration');
+Route::get('/staff_registration', [UserController::class, 'showStaff'], )->middleware(['auth', 'role:admin'])->name('staff_registration');
 
 // Include authentication routes
 require __DIR__.'/auth.php';
