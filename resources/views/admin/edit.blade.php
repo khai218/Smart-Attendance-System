@@ -11,7 +11,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-lg sm:rounded-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-6">Edit User</h2>
-                <form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data" class="space-y-6">
+                
+                <!-- Main Form for Editing User -->
+                <form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data" class="space-y-6" id="editUserForm">
                     @csrf
                     @method('PUT')
 
@@ -40,18 +42,27 @@
                     <fieldset>
                         <x-input-label for="fingerprint_id" :value="__('Fingerprint ID')" />
                         <select id="fingerprint_id" name="fingerprint_id" class="block mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" required>
-                                <option value="{{ old('fingerprint_id', $user->fingerprint_id) }}">{{ __('Select Fingerprint ID') }}</option>
+                            <option value="" disabled>{{ __('Select Fingerprint ID') }}</option>
+                            <option value="">{{ __('None') }}</option> <!-- Optional None option -->
                             @foreach ($fingerprintIds as $fingerprintId)
-                                <option value="{{ $fingerprintId }}">{{ $fingerprintId }}</option>
+                                <option value="{{ $fingerprintId }}" {{ old('fingerprint_id', $user->fingerprint_id) == $fingerprintId ? 'selected' : '' }}>
+                                    {{ $fingerprintId }}
+                                </option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('fingerprint_id')" class="mt-2" />
-                    </fieldset>            
+                    </fieldset>
 
-                    <!-- Image Upload -->
+                    <!-- Current Image Display -->
                     <fieldset>
-                        <x-input-label for="image" :value="__('Upload Image')" />
-                        <input id="image" class="block mt-1 w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 focus:border-indigo-600" type="file" name="image" accept="image/*" onchange="previewImage(event)" required />
+                        <x-input-label for="current_image" :value="__('Current Image')" />
+                        @if($user->image) <!-- Check if the user has an image -->
+                            <img src="{{ asset('path/to/images/' . $user->image) }}" alt="Current Image" class="mt-4 rounded-lg shadow-lg max-w-xs" />
+                        @else
+                            <p class="mt-2 text-gray-600">{{ __('No image uploaded') }}</p>
+                        @endif
+                        <x-input-label for="image" :value="__('Upload New Image (if any)')" />
+                        <input id="image" class="block mt-1 w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 focus:border-indigo-600" type="file" name="image" accept="image/*" onchange="previewImage(event)" />
                         <img id="preview" class="mt-4 rounded-lg shadow-lg max-w-xs" />
                         <x-input-error :messages="$errors->get('image')" class="mt-2" />
                     </fieldset>
@@ -63,17 +74,8 @@
                         </a>
 
                         <div class="flex space-x-3">
-                            <!-- Delete Button -->
-                            <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 transition ease-in-out duration-150">
-                                    {{ __('Delete') }}
-                                </button>
-                            </form>
-
                             <!-- Save Button -->
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ease-in-out duration-150">
+                            <button type="submit" form="editUserForm" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ease-in-out duration-150">
                                 {{ __('Save Changes') }}
                             </button>
                         </div>
@@ -86,7 +88,7 @@
     <script>
         function previewImage(event) {
             const reader = new FileReader();
-            reader.onload = function(){
+            reader.onload = function() {
                 const preview = document.getElementById('preview');
                 preview.src = reader.result;
             };

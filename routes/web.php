@@ -9,6 +9,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\FingerprintController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -103,6 +104,19 @@ Route::get('/staff_registration', [RegisteredUserController::class, 'staffRegist
 Route::post('/staff_registration', [RegisteredUserController::class, 'registerStaff'])->middleware(['auth', 'role:admin'])->name('staff.register');
 
 Route::get('/staff_registration', [UserController::class, 'showStaff'], )->middleware(['auth', 'role:admin'])->name('staff_registration');
+
+
+Route::get('/controller', function () {
+    return view('admin.controller');
+})->middleware(['auth', 'role:admin'])->name('controller');
+
+Route::post('/register-fingerprint', [FingerprintController::class, 'register'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('register-fingerprint');
+
+Route::post('/verify-fingerprint', [FingerprintController::class, 'verify'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('verify-fingerprint');
 
 // Include authentication routes
 require __DIR__.'/auth.php';
