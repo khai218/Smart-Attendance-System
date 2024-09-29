@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 
 class AdminController extends Controller
@@ -22,6 +23,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'matrixno' => 'required|string|max:255',
+            'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -29,6 +31,7 @@ class AdminController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->matrixno = $request->matrixno;
+        $user->fingerprint_id = $request->fingerprint_id;
 
         if ($request->hasFile('image')) {
             // Store the new image
@@ -52,7 +55,17 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit', compact('user'));
+
+        // Fetch all available fingerprint IDs
+        $allFingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
+    
+        // Get the used fingerprint IDs from the 'users' table
+        $usedFingerprintIds = User::pluck('fingerprint_id')->toArray();
+    
+        // Filter out the used fingerprint IDs
+        $availableFingerprintIds = $allFingerprintIds->diff($usedFingerprintIds);
+
+        return view('admin.edit', compact('user'),['fingerprintIds' => $availableFingerprintIds]);
     }
 
     public function staff_edit($id)

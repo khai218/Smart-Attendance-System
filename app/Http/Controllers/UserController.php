@@ -11,10 +11,21 @@ class UserController extends Controller
     public function showUsers() {
         // Fetch users data
         $users = User::all();
-        $fingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
-        
-        // Pass the $users data to the 'admin.registration' view
-        return view('admin.registration', ['users' => $users],['fingerprintIds' => $fingerprintIds]);
+    
+        // Fetch all available fingerprint IDs
+        $allFingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
+    
+        // Get the used fingerprint IDs from the 'users' table
+        $usedFingerprintIds = User::pluck('fingerprint_id')->toArray();
+    
+        // Filter out the used fingerprint IDs
+        $availableFingerprintIds = $allFingerprintIds->diff($usedFingerprintIds);
+    
+        // Pass both $users and filtered $availableFingerprintIds to the 'admin.registration' view
+        return view('admin.registration', [
+            'users' => $users,
+            'fingerprintIds' => $availableFingerprintIds
+        ]);
     }
 
     public function showStaff() {
