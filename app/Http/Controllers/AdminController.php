@@ -23,8 +23,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'matrixno' => 'required|string|max:255',
-            'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'fingerprint_id' => 'nullable|required|exists:fingerprint_id,fingerprint_id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5048'
         ]);
 
         // Update user data
@@ -55,17 +55,22 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-
+    
         // Fetch all available fingerprint IDs
         $allFingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
     
         // Get the used fingerprint IDs from the 'users' table
-        $usedFingerprintIds = User::pluck('fingerprint_id')->toArray();
+        $usedFingerprintIds = User::where('id', '!=', $id)->pluck('fingerprint_id')->toArray(); // Exclude current user's ID
     
         // Filter out the used fingerprint IDs
         $availableFingerprintIds = $allFingerprintIds->diff($usedFingerprintIds);
-
-        return view('admin.edit', compact('user'),['fingerprintIds' => $availableFingerprintIds]);
+    
+        // Ensure the current user's fingerprint ID is included in the available IDs
+        if ($user->fingerprint_id && !$availableFingerprintIds->contains($user->fingerprint_id)) {
+            $availableFingerprintIds->push($user->fingerprint_id);
+        }
+    
+        return view('admin.edit', compact('user'), ['fingerprintIds' => $availableFingerprintIds]);
     }
 
     public function staff_edit($id)

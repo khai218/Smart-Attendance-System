@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
         // Validate the name, matrix number, email, fingerprint ID, and image fields
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'matrixno' => ['required', 'string', 'max:255'],
+            'matrixno' => ['required', 'string', 'max:255','unique:users,matrixno'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id', // Validate against the fingerprint table
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048'

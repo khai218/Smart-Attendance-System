@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('admin-dashboard') }}">
                         <img src="{{ asset('logo/icon-poli.png')}}" width="100px" height="100px">
                     </a>
                 </div>
@@ -20,6 +20,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('staff_registration')" :active="request()->routeIs('admin.staff_registration')">
                         {{ __('Staff') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('controller')" :active="request()->routeIs('admin.controller')">
+                        {{ __('Controller') }}
                     </x-nav-link>
                 </div>
             </div>

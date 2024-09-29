@@ -38,7 +38,7 @@
 
                         <!-- Fingerprint ID Selection -->
                         <fieldset>
-                            <x-input-label for="fingerprint_id" :value="__('Fingerprint ID')" />
+                            <x-input-label for="fingerprint_id" :value="old(__('Fingerprint ID'))" />
                             <select id="fingerprint_id" name="fingerprint_id" class="block mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50" required>
                                 <option value="">{{ __('Select Fingerprint ID') }}</option>
                                 @foreach ($fingerprintIds as $fingerprintId)
@@ -50,7 +50,7 @@
 
                         <!-- Image Upload -->
                         <fieldset>
-                            <x-input-label for="image" :value="__('Upload Image')" />
+                            <x-input-label for="image" :value="old(__('Upload Image'))" />
                             <input id="image" class="block mt-1 w-full" type="file" name="image" accept="image/*" />
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
                         </fieldset>
