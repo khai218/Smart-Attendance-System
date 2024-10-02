@@ -58,8 +58,8 @@ class RegisteredUserController extends Controller
 
         // Create the user with the default password and fingerprint_id
         $user = User::create([
-            'name' => $request->name,
-            'matrixno' => $request->matrixno,
+            'name' => strtoupper($request->name),
+            'matrixno' => strtoupper($request->matrixno),
             'email' => $request->email,
             'fingerprint_id' => $request->fingerprint_id, // Include fingerprint_id
             'password' => Hash::make($defaultPassword), // Hash the default password
@@ -67,13 +67,13 @@ class RegisteredUserController extends Controller
         ]);
 
         // Trigger the registered event
-        event(new Registered($user));
+        //event(new Registered($user));
 
         // Optional: create a related user activity table or any custom behavior
-        $this->createUserActivityTable($user->matrixno);
+        //$this->createUserActivityTable($user->matrixno);
 
         // Redirect to the admin dashboard with a success message
-        return redirect()->route('admin.dashboard')->with('success', 'User registered successfully with default password.');
+        return redirect()->route('registration')->with('success', 'User registered successfully with default password.');
     }
 
     /**
