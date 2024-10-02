@@ -54,6 +54,8 @@ Route::get('/admin/users/{id}', [AdminController::class, 'edit'])->name('admin.u
 Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
 Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
+
+
 Route::get('/admin/staff/{id}', [AdminController::class, 'staff_edit'])->name('admin.staff.edit');
 
 Route::middleware('auth')->group(function () {
@@ -65,6 +67,11 @@ Route::middleware('auth')->group(function () {
     // Admin registration routes
     Route::get('admin/register', [RegisteredUserController::class, 'create'])->name('admin.register');
     Route::post('admin/register', [RegisteredUserController::class, 'store']);
+
+    Route::get('/event-management', [AdminController::class, 'event_view'])->name('event-management');
+    Route::post('/event-management', [AdminController::class, 'event_store'])->name('admin.event-register');
+    Route::put('/event-management/{id}/end', [AdminController::class, 'event_end'])->name('admin.event-end');
+    Route::delete('/event-management/{id}/terminate', [AdminController::class, 'event_terminate'])->name('admin.event-terminate');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
