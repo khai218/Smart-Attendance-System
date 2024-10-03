@@ -13,7 +13,13 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $total_userCount = User::count(); // Assuming you have a User model
+        $eventCount = Event::count(); // Assuming you have an Event model
+        $event_historyCount = Event_History::count(); // Assuming you have an Event mode'
+
+        $userCount = max(0, $total_userCount - 1);
+
+        return view('admin.dashboard',compact('userCount', 'eventCount','event_historyCount'));
     }
 
     public function update(Request $request, $id)

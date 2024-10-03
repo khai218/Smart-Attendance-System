@@ -107,7 +107,8 @@
                             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                 <th class="border border-gray-300 px-6 py-3 text-left">{{ __('Activity') }}</th>
                                 <th class="border border-gray-300 px-6 py-3 text-left">{{ __('Location') }}</th>
-                                <th class="border border-gray-300 px-6 py-3 text-left">{{ __('Date/Time') }}</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left">{{ __('Date') }}</th>
+                                <th class="border border-gray-300 px-6 py-3 text-left">{{ __('Time') }}</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700 text-sm">
@@ -120,7 +121,8 @@
                                     <tr class="bg-white hover:bg-gray-100 border-b border-gray-200">
                                         <td class="border border-gray-300 px-6 py-4">{{ $event->name }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $event->location }}</td>
-                                        <td class="border border-gray-300 px-6 py-4">{{ \Carbon\Carbon::parse($event->time_held)->format('d M Y, H:i') }}</td>
+                                        <td class="border border-gray-300 px-6 py-4">{{ \Carbon\Carbon::parse($event->time_held)->format('d M Y') }}</td>
+                                        <td class="border border-gray-300 px-6 py-4">{{ \Carbon\Carbon::parse($event->time_held)->format(' H:i') }}</td>
                                     </tr>
                                 @endforeach
                             @endif

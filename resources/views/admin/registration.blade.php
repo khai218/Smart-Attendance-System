@@ -116,10 +116,9 @@
                                             </td>
                                             <td class="border border-gray-300 px-6 py-4">
                                                 @if($user->image)
-                                                    <button onclick="openModal('{{ asset('storage/'.$user->image) }}')" 
-                                                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                        View Image
-                                                    </button>
+                                                    <x-primary-button onclick="openModal('{{ asset('storage/'.$user->image) }}')">
+                                                        <img src="{{ asset('logo/mata-putih.png') }}" alt="View Icon" class="h-6 w-6">
+                                                    </x-primary-button>
                                                 @else
                                                     <div class="bg-red-100 text-red-600 px-3 py-1 rounded-lg">
                                                         <span>No Image</span>
@@ -127,11 +126,27 @@
                                                 @endif
                                             </td>
                                             <td class="border border-gray-300 px-6 py-4">
-                                                <a href="{{ route('admin.users.edit', $user->id) }}" 
-                                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                    {{ __('Edit') }}
-                                                </a>
-                                            </td>
+                                                <div class="flex">
+                                                    <form method="GET" action="{{ route('admin.users.edit', $user->id) }}">
+                                                        <x-primary-button>
+                                                            <img src="{{ asset('logo/pen-putih.png') }}" alt="Edit Icon" class="h-6 w-6">
+                                                        </x-primary-button>
+                                                    </form>
+
+                                                    <div class="px-2"> <!-- Padding on the left and right of the vertical line -->
+                                                        <div class="vl"></div> <!-- Vertical line -->
+                                                    </div>
+
+                                                    <!-- Delete Button -->
+                                                    <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this user?') }}')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <x-danger-button>
+                                                            <img src="{{ asset('logo/tong-sampah.png') }}" alt="Delete Icon" class="h-6 w-6">
+                                                        </x-danger-button>
+                                                    </form>
+                                                </div>
+                                            </td>                                            
                                         </tr>
                                     @endforeach
                                 @endif
@@ -143,6 +158,13 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .vl {
+            border-left: 3px solid white;
+            height: 1rem;
+        }
+    </style>
 
     <!-- JavaScript for Search and Redirect -->
     <script>
