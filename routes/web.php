@@ -10,10 +10,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\FingerprintController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -37,9 +36,7 @@ Route::get('/registration', [UserController::class, 'showUsers'], function () {
     return view('admin.registration');
 })->middleware(['auth', 'verified'])->name('registration');
 
-Route::get('/admin-dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('admin-dashboard');
+Route::get('/admin-dashboard',[AdminController::class,'dashboard'])->middleware(['auth', 'verified'])->name('admin-dashboard');
 
 Route::get('/test-fingerprint', [RegisteredUserController::class, 'test']);
 

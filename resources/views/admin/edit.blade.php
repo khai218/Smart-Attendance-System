@@ -57,7 +57,7 @@
                     <fieldset>
                         <x-input-label for="current_image" :value="__('Current Image')" />
                         @if($user->image) <!-- Check if the user has an image -->
-                            <img src="{{ asset('path/to/images/' . $user->image) }}" alt="Current Image" class="mt-4 rounded-lg shadow-lg max-w-xs" />
+                            <img src="{{ asset('storage/' . $user->image) }}" alt="Current Image" class="mt-4 rounded-lg shadow-lg max-w-xs" />
                         @else
                             <p class="mt-2 text-gray-600">{{ __('No image uploaded') }}</p>
                         @endif

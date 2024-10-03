@@ -18,10 +18,10 @@
                     <x-nav-link :href="route('registration')" :active="request()->routeIs('registration')">
                         {{ __('Users') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('event-management')" :active="request()->routeIs('event.management')">
+                    <x-nav-link :href="route('event-management')" :active="request()->routeIs('event-management')">
                         {{ __('Event') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('controller')" :active="request()->routeIs('admin.controller')">
+                    <x-nav-link :href="route('controller')" :active="request()->routeIs('controller')">
                         {{ __('Controller') }}
                     </x-nav-link>
                 </div>
