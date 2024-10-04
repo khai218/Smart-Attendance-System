@@ -50,14 +50,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        $url = "dashboard";
-
-        if($request->user()->role === 'admin'){
-            $url = "admin/dashboard";
-        }else if ($request->user()->role === 'agent'){
-            $url = "agent/dashboard";
-        }
-
-        return redirect()->intended($url);
+      
+        return redirect('/');
     }
 }
