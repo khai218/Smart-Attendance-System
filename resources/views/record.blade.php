@@ -12,8 +12,10 @@
                 <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Your Activity Records') }}</h3>
 
                 <!-- Search Bar -->
-                <div class="mb-4">
-                    <input id="search" type="text" placeholder="Search..." class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500" onkeyup="searchTable()">
+                <div class="mb-6">
+                    <input id="search" type="text" aria-label="Search Activity Records" placeholder="Search..." 
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" 
+                    onkeyup="searchTable()">
                 </div>
 
                 <!-- Events Table -->
@@ -30,13 +32,13 @@
                         <tbody class="text-gray-700 text-sm">
                             @if ($events->isEmpty())
                                 <tr>
-                                    <td colspan="3" class="border border-gray-300 px-6 py-4 text-center text-gray-500">
+                                    <td colspan="4" class="border border-gray-300 px-6 py-4 text-center text-gray-500">
                                         {{ __('No record, guess it’s time to be productive?') }}
                                     </td>
                                 </tr>
                             @else
                                 @foreach ($events as $event)
-                                    <tr class="bg-white hover:bg-gray-100 border-b border-gray-200">
+                                    <tr class="bg-white hover:bg-gray-100 transition duration-150 ease-in-out border-b border-gray-200">
                                         <td class="border border-gray-300 px-6 py-4">{{ $event->event_name }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ $event->location }}</td>
                                         <td class="border border-gray-300 px-6 py-4">{{ \Carbon\Carbon::parse($event->created_at)->format('d M Y') }}</td>

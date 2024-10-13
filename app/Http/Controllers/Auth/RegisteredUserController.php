@@ -42,8 +42,8 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'matrixno' => ['required', 'string', 'max:255','unique:users,matrixno'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id', // Validate against the fingerprint table
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048'
+            'fingerprint_id' => 'required|exists:fingerprint_id,fingerprint_id',
+            'new_face_id' => 'required|exists:new_face_id,new_face_id', 
         ]);
 
         // Set a default password

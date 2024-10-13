@@ -32,7 +32,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'matrixno' => 'required|string|max:255',
             'fingerprint_id' => 'nullable|required|exists:fingerprint_id,fingerprint_id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5048'
+            'new_face_id' => 'nullable|required|exists:new_face_id,new_face_id'
         ]);
 
         // Update user data
@@ -40,12 +40,7 @@ class AdminController extends Controller
         $user->email = $request->email;
         $user->matrixno = strtoupper($request->matrixno);
         $user->fingerprint_id = $request->fingerprint_id;
-
-        if ($request->hasFile('image')) {
-            // Store the new image
-            $imagePath = $request->file('image')->store('images', 'public');
-            $user->image = $imagePath;
-        }
+        $user->new_face_id = $request->new_face_id;
 
         $user->save();
 
@@ -67,8 +62,8 @@ class AdminController extends Controller
         // Fetch all available fingerprint IDs
         $allFingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
     
-        // Get the used fingerprint IDs from the 'users' table
-        $usedFingerprintIds = User::where('id', '!=', $id)->pluck('fingerprint_id')->toArray(); // Exclude current user's ID
+        // Get the used fingerprint IDs from the 'users' table, excluding the current user's ID
+        $usedFingerprintIds = User::where('id', '!=', $id)->pluck('fingerprint_id')->toArray();
     
         // Filter out the used fingerprint IDs
         $availableFingerprintIds = $allFingerprintIds->diff($usedFingerprintIds);
@@ -78,8 +73,24 @@ class AdminController extends Controller
             $availableFingerprintIds->push($user->fingerprint_id);
         }
     
-        return view('admin.edit', compact('user'), ['fingerprintIds' => $availableFingerprintIds]);
+        // Fetch all available face IDs
+        $allfaceids = DB::table('new_face_id')->pluck('new_face_id');
+    
+        // Get the used face IDs from the 'users' table, excluding the current user's ID
+        $usedfaceids = User::where('id', '!=', $id)->pluck('new_face_id')->toArray();
+    
+        // Filter out the used face IDs
+        $availablefaceids = $allfaceids->diff($usedfaceids);
+    
+        // Ensure the current user's face ID is included in the available IDs
+        if ($user->new_face_id && !$availablefaceids->contains($user->new_face_id)) {
+            $availablefaceids->push($user->new_face_id);
+        }
+    
+        // Pass all necessary data to the view in one array
+        return view('admin.edit', compact('user', 'availableFingerprintIds', 'availablefaceids'));
     }
+    
 
     public function staff_edit($id)
     {

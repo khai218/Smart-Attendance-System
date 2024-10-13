@@ -14,17 +14,24 @@ class UserController extends Controller
     
         // Fetch all available fingerprint IDs
         $allFingerprintIds = DB::table('fingerprint_id')->pluck('fingerprint_id');
+
+        $allfaceids = DB::table('new_face_id')->pluck('new_face_id');
     
         // Get the used fingerprint IDs from the 'users' table
         $usedFingerprintIds = User::pluck('fingerprint_id')->toArray();
     
         // Filter out the used fingerprint IDs
         $availableFingerprintIds = $allFingerprintIds->diff($usedFingerprintIds);
+
+        $usedfaceids = User::pluck('new_face_id')->toArray();
+
+        $availablefaceids = $allfaceids->diff($usedfaceids);
     
         // Pass both $users and filtered $availableFingerprintIds to the 'admin.registration' view
         return view('admin.registration', [
             'users' => $users,
-            'fingerprintIds' => $availableFingerprintIds
+            'fingerprintIds' => $availableFingerprintIds,
+            'faceids' => $availablefaceids
         ]);
     }
 
