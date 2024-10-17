@@ -72,9 +72,21 @@
                             <x-input-error :messages="$errors->get('location')" class="mt-2" />
                         </fieldset>
 
+                        <fieldset>
+                            <x-input-label for="location" :value="__('Organizer')" />
+                            <x-text-input id="location" class="block mt-1 w-full" type="text" name="location" :value="old('location')" placeholder="Enter the event's location" required autocomplete="location" />
+                            <x-input-error :messages="$errors->get('location')" class="mt-2" />
+                        </fieldset>
+
                         <!-- Event Timestamp -->
                         <fieldset>
-                            <x-input-label for="time_held" :value="__('Event Timestamp')" />
+                            <x-input-label for="time_held" :value="__('Start')" />
+                            <x-text-input id="time_held" class="block mt-1 w-full" type="datetime-local" name="time_held" :value="old('time_held')" required autocomplete="time_held" />
+                            <x-input-error :messages="$errors->get('time_held')" class="mt-2" />
+                        </fieldset>
+
+                        <fieldset>
+                            <x-input-label for="time_held" :value="__('End')" />
                             <x-text-input id="time_held" class="block mt-1 w-full" type="datetime-local" name="time_held" :value="old('time_held')" required autocomplete="time_held" />
                             <x-input-error :messages="$errors->get('time_held')" class="mt-2" />
                         </fieldset>
