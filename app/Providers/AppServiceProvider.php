@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,12 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register the Blade component correctly
+        Blade::component('bland-layout', \App\View\Components\BlandLayout::class);
+        
+        // Custom email verification notification
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
-            ->view('auth.verify-custom',[
-                'user' => $notifiable,
-                'url'=> $url,
-            ]);
+                ->view('auth.verify-custom', [
+                    'user' => $notifiable,
+                    'url' => $url,
+                ]);
         });
     }
 }

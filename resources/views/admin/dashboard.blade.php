@@ -33,8 +33,8 @@
                         <div class="vl"></div> <!-- Vertical line -->
                     </div>
                     <div class="ml-4"> <!-- Separate div for text with left margin -->
-                        <h2 class="text-xl font-semibold">Total Users</h2>
-                        <p class="text-3xl font-bold">{{ $userCount }}</p> <!-- Increased font size for emphasis -->
+                        <h2 class="text-xl font-semibold">Total Users:</h2>
+                        <p class="text-2xl font-bold">{{ $userCount }}</p> <!-- Increased font size for emphasis -->
                     </div>
                 </div>
                 
@@ -47,8 +47,8 @@
                         <div class="vl"></div> <!-- Vertical line -->
                     </div>
                     <div class="ml-4"> <!-- Separate div for text with left margin -->
-                        <h2 class="text-xl font-semibold">Total Events</h2>
-                        <p class="text-3xl font-bold">{{ $eventCount }}</p> <!-- Increased font size for emphasis -->
+                        <h2 class="text-xl font-semibold">Current Events:</h2>
+                        <p class="text-2xl font-bold">{{ $eventCount }}</p> <!-- Increased font size for emphasis -->
                     </div>
                 </div>
 
@@ -61,8 +61,8 @@
                         <div class="vl"></div> <!-- Vertical line -->
                     </div>
                     <div class="ml-4"> <!-- Separate div for text with left margin -->
-                        <h2 class="text-xl font-semibold">Total Event History</h2>
-                        <p class="text-3xl font-bold">{{ $event_historyCount }}</p> <!-- Increased font size for emphasis -->
+                        <h2 class="text-xl font-semibold">Event History:</h2>
+                        <p class="text-2xl font-bold">{{ $event_historyCount }}</p> <!-- Increased font size for emphasis -->
                     </div>
                 </div>
             </div>

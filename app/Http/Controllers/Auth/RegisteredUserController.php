@@ -63,7 +63,8 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'fingerprint_id' => $request->fingerprint_id, // Include fingerprint_id
             'password' => Hash::make($defaultPassword), // Hash the default password
-            'image' => $imagePath // Store the image path in the database
+            'image' => $imagePath, // Store the image path in the database
+            'email_verified_at' => now()
         ]);
 
         // Trigger the registered event

@@ -13,6 +13,6 @@ class Event_History extends Model
     protected $table = 'event_history'; // Assuming the table name is 'event_histories'
     
     // Add fillable fields if needed
-    protected $fillable = ['name', 'location', 'time_held'];
+    protected $fillable = ['name', 'location', 'time_start','time_end','event_id'];
 }
 
