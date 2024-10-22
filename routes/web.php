@@ -9,10 +9,10 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\FingerprintController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -36,9 +36,24 @@ Route::get('/registration', [UserController::class, 'showUsers'], function () {
     return view('admin.registration');
 })->middleware(['auth', 'verified'])->name('registration');
 
-Route::get('/admin-dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('admin-dashboard');
+Route::get('/admin-dashboard',[AdminController::class,'dashboard'])->middleware(['auth', 'verified'])->name('admin-dashboard');
+
+Route::get('/test-fingerprint', [RegisteredUserController::class, 'test']);
+
+Route::post('/admin/upload-image/{user}', [RegisteredUserController::class, 'uploadImage'])->name('admin.uploadImage');
+
+Route::get('/image-viewer', function () {
+    $imageUrl = request('imageUrl');
+    return view('admin.image-viewer', compact('imageUrl'));
+});
+
+Route::get('/admin/users/{id}', [AdminController::class, 'edit'])->name('admin.users.edit');
+Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
+Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+
+
+
+Route::get('/admin/staff/{id}', [AdminController::class, 'staff_edit'])->name('admin.staff.edit');
 
 Route::middleware('auth')->group(function () {
     // Regular user profile routes
@@ -49,6 +64,11 @@ Route::middleware('auth')->group(function () {
     // Admin registration routes
     Route::get('admin/register', [RegisteredUserController::class, 'create'])->name('admin.register');
     Route::post('admin/register', [RegisteredUserController::class, 'store']);
+
+    Route::get('/event-management', [AdminController::class, 'event_view'])->name('event-management');
+    Route::post('/event-management', [AdminController::class, 'event_store'])->name('admin.event-register');
+    Route::put('/event-management/{id}/end', [AdminController::class, 'event_end'])->name('admin.event-end');
+    Route::delete('/event-management/{id}/terminate', [AdminController::class, 'event_terminate'])->name('admin.event-terminate');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -87,7 +107,20 @@ Route::get('/staff_registration', [RegisteredUserController::class, 'staffRegist
 // Route to handle staff registration form submission
 Route::post('/staff_registration', [RegisteredUserController::class, 'registerStaff'])->middleware(['auth', 'role:admin'])->name('staff.register');
 
-Route::get('/staff_registration', [UserController::class, 'showStaff'])->middleware(['auth', 'role:admin'])->name('staff_registration');
+Route::get('/staff_registration', [UserController::class, 'showStaff'], )->middleware(['auth', 'role:admin'])->name('staff_registration');
+
+
+Route::get('/controller', function () {
+    return view('admin.controller');
+})->middleware(['auth', 'role:admin'])->name('controller');
+
+Route::post('/register-fingerprint', [FingerprintController::class, 'register'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('register-fingerprint');
+
+Route::post('/verify-fingerprint', [FingerprintController::class, 'verify'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('verify-fingerprint');
 
 // Include authentication routes
 require __DIR__.'/auth.php';

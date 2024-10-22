@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\User_Event;
 
 class ActivityController extends Controller
 {
@@ -15,20 +15,11 @@ class ActivityController extends Controller
     {
         // Get the matrix number of the logged-in user
         $matrixno = Auth::user()->matrixno;
-        
-        // Dynamically generate the user's activity table name
-        $tableName = 'user_' . $matrixno;
 
-        // Check if the user's activity table exists
-        if (DB::getSchemaBuilder()->hasTable($tableName)) {
-            // Fetch all activity records from the user's table
-            $activities = DB::table($tableName)->get();
-        } else {
-            // If the table doesn't exist, return an empty collection
-            $activities = collect();
-        }
+        // Fetch all activity records for the user based on the matrix number
+        $events = User_Event::where('matrixno', $matrixno)->get();
 
         // Pass the activity data to the view
-        return view('record', compact('activities'));
+        return view('record', compact('events'));
     }
 }

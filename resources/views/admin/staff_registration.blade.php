@@ -49,24 +49,31 @@
 
                     <!-- Staff Table -->
                     <div class="overflow-x-auto">
-                        <table class="table-auto w-full border-collapse border border-gray-200" id="staffTable">
+                        <table class="table-auto w-full border-collapse border border-gray-300 rounded-lg shadow-lg" id="staffTable">
                             <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="border border-gray-200 px-4 py-2 text-left">{{ __('Name') }}</th>
-                                    <th class="border border-gray-200 px-4 py-2 text-left">{{ __('Email') }}</th>
+                                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="border border-gray-300 px-6 py-3 text-left min-w-[150px]">{{ __('Name') }}</th>
+                                    <th class="border border-gray-300 px-6 py-3 text-left min-w-[180px]">{{ __('Email') }}</th>
+                                    <th class="border border-gray-300 px-6 py-3 text-left min-w-[130px]">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-gray-700 text-sm">
                                 @if ($users->isEmpty())
                                     <tr>
-                                        <td colspan="2" class="border border-gray-200 px-4 py-2 text-center">{{ __('No staff found.') }}</td>
+                                        <td colspan="3" class="border border-gray-300 px-6 py-4 text-center">{{ __('No staff found.') }}</td>
                                     </tr>
                                 @else
                                     @foreach ($users as $user)
                                         @if ($user->role === 'agent')
-                                            <tr class="bg-white hover:bg-gray-50 h-12">
-                                                <td class="border border-gray-200 px-4 py-2">{{ $user->name }}</td>
-                                                <td class="border border-gray-200 px-4 py-2">{{ $user->email }}</td>
+                                            <tr class="bg-white hover:bg-gray-100 border-b border-gray-200">
+                                                <td class="border border-gray-300 px-6 py-4">{{ $user->name }}</td>
+                                                <td class="border border-gray-300 px-6 py-4">{{ $user->email }}</td>
+                                                <td class="border border-gray-300 px-6 py-4">
+                                                    <a href="{{ route('admin.staff.edit', $user->id) }}" 
+                                                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                                            {{ __('Edit') }}
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endif
                                     @endforeach
